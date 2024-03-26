@@ -1,4 +1,4 @@
-name: Greeting App CI/CD
+name: Greetings App
 
 on:
   push:
@@ -9,17 +9,28 @@ on:
       - main
 
 jobs:
-  test:
+  start_server_and_run_tests:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  
+
     - name: Install dependencies
       run: npm install
 
-    - name: Run Cypress tests
-      run: npm run cypress:open
+    - name: Start server
+      run: npm start &
+
+    - name: Install Cypress
+      run: npm install cypress --save-dev  
+
+    - name: Run Cypress headless
+      run:  npx cypress run --headless
 
 
